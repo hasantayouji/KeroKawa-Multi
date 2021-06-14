@@ -49,12 +49,12 @@ class Processing(threading.Thread):
                             ["Sec1", "Sec2", "Sec3"], i1, img1, img2, img3)
             elif cam_pos1[0] == '2' and cam_pos1[1] == 'T1':
                 i2 += 1
-                mainprocess2(slist4, slist5, blist4, blist5, ilist4, ilist5, ["Sec4", "Sec5"], i2, img2, img3)
+                mainprocess2(slist4, slist5, blist4, blist5, ilist4, ilist5, ["Sec4", "Sec5"], i2, img1, img2, img3)
             elif cam_pos1[0] == '2' and not cam_pos1[1] == 'T1':
                 i2 += 1
                 mainprocess(slist4, slist5, slist6, blist4, blist5, blist6, ilist4, ilist5, ilist6,
                             ["Sec4", "Sec5", "Sec6"], i2, img1, img2, img3)
-            if i2 == 12 and cam_pos1[0] == 'Done':
+            if cam_pos1[0] == 'Done':
                 i1 = 0
                 i2 = 0
                 zmqo.imsend("Done", img1)
