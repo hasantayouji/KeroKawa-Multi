@@ -6,7 +6,7 @@ from pypylon import pylon
 import cv2
 import time
 
-dummy = cv2.imread("10038.png")
+dummy = cv2.imread("/home/jetsonmapinai/Documents/KeroKawa-Multi-versi2/7000.png")
 demmy = cv2.rectangle(dummy, (0, 0), (1280, 1024), (0, 0, 0))
 
 
@@ -15,7 +15,7 @@ class kamera():
         info = pylon.DeviceInfo()
         info.SetPropertyValue('IpAddress', ip_address)
         self.camera = pylon.InstantCamera(pylon.TlFactory.GetInstance().CreateFirstDevice(info))
-        self.camera.ExposureTimeAbs = 500
+        #self.camera.ExposureTimeAbs = 500
         # Grabing Continusely (video) with minimal delay
         self.camera.StartGrabbing(pylon.GrabStrategy_LatestImageOnly)
         self.converter = pylon.ImageFormatConverter()
@@ -37,14 +37,16 @@ class kamera():
                 image = self.converter.Convert(grabresult)
                 img = image.GetArray()
                 # print(img.shape)
-                return img, 1
+                img = cv2.flip(img, 1)
+                return img
             else:
                 # return np.zeros((1024,1280,3)).astype(np.uint8), 0
                 while not grabresult.GrabSucceeded():
                     grabresult = self.camera.RetrieveResult(5000, pylon.TimeoutHandling_ThrowException)
                 image = self.converter.Convert(grabresult)
                 img = image.GetArray()
-                return img, 1
+                img = cv2.flip(img, 1)
+                return img
 
             #     img = np.zeros((3,3,3))            
             # grabResult.Release()
@@ -61,14 +63,17 @@ class kamera():
 if __name__ == '__main__':
     cam1 = kamera('192.168.0.234')
     cam2 = kamera('192.168.0.123')
+    cam3 = kamera('192.168.0.235')
     input('Press Enter')
     while True:
         st = time.time()
         pic1, __ = cam1.ambilgambar()
         pic2, __ = cam2.ambilgambar()
+        pic3, __ = cam3.ambilgambar()
         # print(time.time()-st)
         cv2.imshow('hasil basler', pic1)
         cv2.imshow('hasil basler2', pic2)
+        cv2.imshow('hasil_basler3', pic3)
         k = cv2.waitKey(1)
         if k == 27:
             break

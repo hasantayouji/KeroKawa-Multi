@@ -4,8 +4,10 @@ import time
 import cv2
 import os
 
-IMAGE_PATH = '/home/jetsonmapinai/Documents/VisualInspection/20419.png'
-PB_PATH = '/home/jetsonmapinai/Documents/VisualInspection/faster_rcnn_resnet_v2_1cls_2_trt.pb'
+IMAGE_PATH = '/home/jetsonmapinai/Documents/KeroKawa-Multi-versi2/dummy.png'
+#PB_PATH = '/home/jetsonmapinai/Documents/models/dec3_inference_graph_150/faster_rcnn_inception_v2_kdsk_des3_150_trt.pb'
+PB_PATH = '/home/jetsonmapinai/Documents/tf_trt_models/data/faster_rcnn_inception_v2_kdsk_feb5_50_trt.pb'
+#/home/jetsonmapinai/Documents/KeroKawa-Multi-versi2/inferences/faster_rcnn_inception_v2_kerokawamulti2_trt.pb'
 
 input_names = ['image_tensor']
 output_names = ['detection_boxes', 'detection_classes', 'detection_scores', 'num_detections']
@@ -31,28 +33,31 @@ tf_num_detections = tf_sess.graph.get_tensor_by_name('num_detections:0')
 
 
 def do_detect(image):
-    class_name = ["BG", "Keropos", "Kurokawa"]
+    class_name = ["BG", "Keropos", "Kurokawa", "Dakon", "Scratch", "OK1", "OK2", "Scratch2", "Dakon2", "Keropos2", "Step", "Kurokawa2", "PartingLine"]
+    #class_name = ["BG", "Keropos", "Kurokawa", "Dakon", "Scratch", "Hole", "D78", "Scratch_OK", "Water_Droplet", "Keropos_Casting", "Step", "PartingLine"]
     scores, boxes, classes, num_detections = tf_sess.run([tf_scores, tf_boxes, tf_classes, tf_num_detections],
                                                          feed_dict={tf_input: image[None, ...]})
-
+    ori = image.copy()
     boxes = boxes[0]
     scores = scores[0]
     classes = classes[0]
     num_detections = num_detections[0]
     cls_det = []
+    bbox = []
     for i in range(int(num_detections)):
-        if scores[i] > 0.65:
+        if (scores[i] > 0.4 and classes[i] == 1) or (scores[i] >= 0.7 and (classes[i] == 2 or classes[i] == 9 or classes[i] == 10 or classes[i] == 11 or classes[i] == 12)) or (scores[i] > 0.98 and (classes[i] == 4)) or (scores[i] >= 0.5 and (classes[i] == 3)):
             box = boxes[i] * np.array([image.shape[0], image.shape[1], image.shape[0], image.shape[1]])
             image = cv2.rectangle(image, (int(box[1]), int(box[0])), (int(box[3]), int(box[2])), (0, 0, 255), 2)
             image = cv2.putText(image, '%s %.2f' % (class_name[int(classes[i])], scores[i]),
                                 (int(box[1]) - 10, int(box[0]) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255))
             cls_det.append(class_name[int(classes[i])])
-    return image, cls_det
+            bbox.append(box)
+    return ori, image, cls_det, bbox
 
 
 def main():
-    image = cv2.imread(IMAGE_PATH)
-    image, __ = do_detect(image)
+    image = cv2.imread('/media/jetsonmapinai/Seagate Backup Plus Drive/IMG-MASSPRO/24-11-2020/NG/part 10059/sect 1/4.png')
+    __, image, __, __ = do_detect(image)
     cv2.imshow('result', image)
     print("-------------------------------------")
     print("PRESS 'ESC' TO PERFORM BENCHMARK TEST WHEN IMAGE APPEARS AND IS IN FOCUS")
