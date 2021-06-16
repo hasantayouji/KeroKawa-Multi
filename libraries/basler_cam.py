@@ -3,10 +3,11 @@ A simple Program for grabing video from basler camera and converting it to openc
 Tested on Basler acA1300-200uc (USB3, linux 64bit , python 3.5)
 '''
 from pypylon import pylon
+from utils.Utils import save_log
 import cv2
 import time
 
-dummy = cv2.imread("/home/jetsonmapinai/Documents/KeroKawa-Multi-versi2/7000.png")
+dummy = cv2.imread("/home/jetsonmapinai/Documents/AI Visual Inspection/7000.png")
 demmy = cv2.rectangle(dummy, (0, 0), (1280, 1024), (0, 0, 0))
 
 
@@ -38,10 +39,12 @@ class kamera():
                 img = image.GetArray()
                 # print(img.shape)
                 img = cv2.flip(img, 1)
+                save_log('Capture image SUCCESS')
                 return img
             else:
                 # return np.zeros((1024,1280,3)).astype(np.uint8), 0
                 while not grabresult.GrabSucceeded():
+                    save_log('Capture image FAILED')
                     grabresult = self.camera.RetrieveResult(5000, pylon.TimeoutHandling_ThrowException)
                 image = self.converter.Convert(grabresult)
                 img = image.GetArray()
