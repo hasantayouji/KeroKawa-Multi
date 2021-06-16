@@ -54,50 +54,9 @@ def get_trig_eth(port_target):
         return pesan
 
 
-def createQImage(pic):
-    pic = cv2.cvtColor(pic, cv2.COLOR_BGR2RGB)
-    qformat = QImage.Format_Indexed8
-    if len(pic.shape) == 3:
-        if pic.shape[2] == 4:
-            qformat = QImage.Format_RGBA8888
-        else:
-            qformat = QImage.Format_RGB888
-    pic = QImage(pic, pic.shape[1], pic.shape[0], pic.strides[0], qformat)
-    return pic
-
-
 def getTgl():
     waktu = datetime.now()
     tgl = waktu.strftime('%d-%m-%Y')
     jam = waktu.strftime('%H:%M:%S')
     bln = waktu.strftime('%m')
-
     return tgl, jam, bln
-
-
-def getAllHistoryCount(tgl, flag='all'):
-    with open(f'history_data/{tgl}_{flag}.csv') as fall:
-        return len(fall.readlines()) + 10000
-
-
-class PandasModel(QAbstractTableModel):
-    def __init__(self, data):
-        super().__init__()
-        self._data = data
-
-    def rowCount(self, parent=None):
-        return self._data.shape[0]
-
-    def columnCount(self, parent=None):
-        return self._data.shape[1]
-
-    def data(self, index, role=Qt.DisplayRole):
-        if index.isValid():
-            if role == Qt.DisplayRole:
-                return str(self._data.iloc[index.row(), index.column()])
-        return None
-
-    def headerData(self, col, orientation=Qt.Horizontal, role=Qt.DisplayRole):
-        if orientation == Qt.Horizontal and role == Qt.DisplayRole:
-            return self._data.columns[col]
-        return None

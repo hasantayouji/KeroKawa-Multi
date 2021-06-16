@@ -6,12 +6,12 @@ from utils.Utils import give_trig_eth, get_trig_eth, save_log
 from inferences.decision import final_decision
 from inferences.decisiond78 import d78_decision
 
+AIO_IP_ADDRESS = "192.168.0.77"
 zmqi_img = zmqimage.ZmqImageShowServer(open_port="tcp://*:5679")
-zmqi = zmqimage.ZmqImageShowServer(open_port="tcp://*:3455")
 
-zmqo = zmqimage.ZmqConnect(connect_to="tcp://192.168.0.77:3445")  # master/GUI
-zmqo_aio_ng = zmqimage.ZmqConnect(connect_to="tcp://192.168.0.77:3435")
-zmqo_save = zmqimage.ZmqConnect(connect_to="tcp://192.168.0.77:3535")  # saving
+zmqo = zmqimage.ZmqConnect(connect_to=f"tcp://{AIO_IP_ADDRESS}:3445")  # master/GUI
+zmqo_aio_ng = zmqimage.ZmqConnect(connect_to=f"tcp://{AIO_IP_ADDRESS}:3435")
+zmqo_save = zmqimage.ZmqConnect(connect_to=f"tcp://{AIO_IP_ADDRESS}:3535")  # saving
 
 
 class Processing(threading.Thread):

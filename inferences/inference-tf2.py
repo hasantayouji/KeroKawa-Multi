@@ -4,7 +4,7 @@ import cv2
 import tensorflow as tf
 
 
-IMAGE_PATH = '7000.png'
+IMAGE_PATH = '/home/jetsonmapinai/Documents/AI Visual Inspection/dummy.png'
 SAVEMODEL_PATH = '/home/jetsonmapinai/Documents/AI Visual Inspection/models/tf2_savedmodel/saved_model'
 
 gpus = tf.config.experimental.list_physical_devices('GPU')
@@ -22,7 +22,8 @@ detect_fn = tf.saved_model.load(SAVEMODEL_PATH, tags=['serve'])
 
 def do_detect(image):
     # image = clahein(clahe)
-    class_name = ["BG", "Keropos", "Dakon", "Scratch", "Kurokawa", "Hole", "D78", "Scratch_OK", "Water_droplet"]
+    class_name = ["BG", "Keropos", "Kurokawa", "Dakon", "Scratch", "Hole", "D78", "Scratch_OK", "Water_Droplet",
+                  "Ketsuniku", "Keropos_Casting", "Step", "PartingLine"]
     ori = image.copy()
     input_tensor = tf.convert_to_tensor(image)
     input_tensor = input_tensor[tf.newaxis, ...]
@@ -34,8 +35,8 @@ def do_detect(image):
     bbox = []
     for i in range(len(boxes)):
         kelas = classes[i]
-        if (scores[i] >= 0.1 and kelas == 1) or\
-                (scores[i] >= 0.3 and kelas != 5 and kelas != 6 and kelas != 7 and kelas != 8):
+        if (scores[i] >= 0.1 and classes[i] == 1) or\
+                (scores[i] >= 0.3 and classes[i] != 5 and classes[i] != 6 and classes[i] != 7 and classes[i] != 8):
             box = boxes[i] * np.array([image.shape[0], image.shape[1], image.shape[0], image.shape[1]])
             image = cv2.rectangle(image, (int(box[1]), int(box[0])), (int(box[3]), int(box[2])), (0, 0, 255), 2)
             image = cv2.putText(image, '%s %.2f' % (class_name[int(classes[i])], scores[i]),
