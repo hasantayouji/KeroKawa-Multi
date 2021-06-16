@@ -1,7 +1,7 @@
 NG_dict = dict(
     Nama='Cacat',
     bbox=[1, 3],
-    img = [],
+    img=[],
     pengikut=0,
     bagian=0
 )
@@ -14,13 +14,13 @@ def final_decision(bbox_list, NG_list, img_list):
         # 	continue
         # if i==4 or i == 5:
         #	continue
-        sl = NG_list[i] #0
+        sl = NG_list[i]  # 0
         bl = bbox_list[i]
         il = img_list[i]
         ng_bagian = i + 1
-        #print(ng_bagian) #1
+        # print(ng_bagian) #1
         # slist1, ...
-        #print(len(sl)) #12
+        # print(len(sl)) #12
         for j in range(len(sl)):  # pembagi frame
             sli = sl[j]
             bli = bl[j]
@@ -58,7 +58,7 @@ def final_decision(bbox_list, NG_list, img_list):
                         Nama=tipeNG,
                         bbox=[bbox_ng[0] - 80, bbox_ng[1] + 80],
                         bboxY=[bbox_ng[2] - 50, bbox_ng[3] + 50],
-                        img = imgNG,
+                        img=imgNG,
                         pengikut=1,
                         bagian=ng_bagian)
                     Final.append(newNG)
@@ -69,7 +69,10 @@ def final_decision(bbox_list, NG_list, img_list):
     list_bagian_NG = []
     list_image_NG = []
     for it in Final:
-        if (it['pengikut'] >= 3 and it['Nama'] != 'Kurokawa' and it['Nama'] != 'Scratch') or (it['pengikut'] > 4 and (it['Nama'] == 'Scratch' or it['Nama'] == 'Scratch2')) or (it['pengikut'] > 3 and it['Nama'] == 'Kurokawa'):  # and (it['Nama']=='kurokawa_forging' or it['Nama']=='scratch'):# and it['pengikut']<10:
+        if (it['nama'] == 'Kurokawa' and it['pengikut'] >= 3) or \
+                (it['Nama'] == 'Scratch' and it['pengikut'] >= 3) or \
+                (it['Nama'] == 'Keropos' and it['pengikut'] >= 3) or \
+                (it['Nama'] == 'Dakon' and it['pengikut'] >= 2):
             list_type_NG.append(it['Nama'])
             list_pengikut_NG.append(it['pengikut'])
             list_bagian_NG.append(it['bagian'])

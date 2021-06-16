@@ -2,7 +2,6 @@ import threading
 from libraries.basler_cam import kamera
 from libraries import zmqimage
 from utils.Utils import get_plc_data, change_plc_data, connectPLC, save_log
-import cv2
 
 connectPLC()
 
@@ -15,7 +14,6 @@ try:
     save_log('Connected to processing script')
 except:
     save_log('Unable to connect to processing script')
-dummy = cv2.imread('/home/jetsonmapinai/Documents/AI Visual Inspection/7000.png')
 
 
 class CamCapture(threading.Thread):
@@ -58,7 +56,7 @@ class CamCapture(threading.Thread):
                 change_plc_data('MR300', '0')
             elif cam_status == '0' and end_part == '1':
 
-                zmqo_images.imsend(["Done", "Done"], dummy)
-                zmqo_images.imsend(["Done", "Done"], dummy)
-                zmqo_images.imsend(["Done", "Done"], dummy)
+                zmqo_images.imsend(["Done", "Done"], cam1_img)
+                zmqo_images.imsend(["Done", "Done"], cam1_img)
+                zmqo_images.imsend(["Done", "Done"], cam1_img)
                 print('FINISH 1 PART')
