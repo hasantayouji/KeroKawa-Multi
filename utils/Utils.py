@@ -25,7 +25,7 @@ def connectPLC():
         print('PLC Connection Error. Check PLC or Hub')
 
 
-def give_trig_eth(port_target, messg):
+def change_plc_data(port_target, messg):
     kirim = 'WR {} {}\r'.format(port_target, messg)  # 'WR dm0010 1'
     save_log(f'Send command to PLC => {port_target}: {messg}')
     while True:
@@ -40,7 +40,7 @@ def give_trig_eth(port_target, messg):
             break
 
 
-def get_trig_eth(port_target):
+def get_plc_data(port_target):
     try:
         kirim = 'RD {}\r'.format(port_target)  # 'RD DM0001 \r'
         s.send(kirim.encode('ascii'))

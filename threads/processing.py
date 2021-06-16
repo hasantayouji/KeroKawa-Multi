@@ -2,7 +2,7 @@ import threading
 from libraries import zmqimage
 from inferences.inference import do_detect
 import time
-from utils.Utils import give_trig_eth, get_trig_eth, save_log
+from utils.Utils import change_plc_data, get_plc_data, save_log
 from inferences.decision import final_decision
 from inferences.decisiond78 import d78_decision
 
@@ -24,8 +24,8 @@ class Processing(threading.Thread):
         ilist4 = []; ilist5 = []; ilist6 = []
         i1 = 0
         i2 = 0
-        D78 = get_trig_eth('MR1709')
-        D26 = get_trig_eth('MR1509')
+        D78 = get_plc_data('MR1709')
+        D26 = get_plc_data('MR1509')
         while True:
             start = time.time()
             cam_pos1, img1 = zmqi_img.imreceive()
@@ -71,7 +71,7 @@ class Processing(threading.Thread):
                     judgment = 'OK'
                     print('OK')
                     zmqo.imsend('OK', img3)
-                    give_trig_eth('MR13', '1')
+                    change_plc_data('MR13', '1')
                 else:
                     print('NG1')
                     judgment = 'NG: '
@@ -82,7 +82,7 @@ class Processing(threading.Thread):
                     zmqo_aio_ng.imsend({'ng': NG_list, 'section': NG_sect}, NG_img[0])
                     zmqo.imsend(ngst, img3)
                     print('NG2')
-                    give_trig_eth('MR14', '1')
+                    change_plc_data('MR14', '1')
                 zmqo_save.imsend(judgment, img1)
                 slist1.clear(); slist2.clear(); slist3.clear()
                 slist4.clear(); slist5.clear(); slist6.clear()
