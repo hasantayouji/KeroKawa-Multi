@@ -9,14 +9,14 @@ class kamera():
         self.sumberdata = folder
         self.list_dir = os.listdir(folder)
 
-    def ambilgambar(self):
-        files = os.listdir(self.sumberdata)
-        imgfile = random.choice(files)
-        save_log(f'{self.sumberdata + imgfile}')
-        while not imgfile.endswith(".png"):
-            imgfile = random.choice(files)
-            print(self.sumberdata + imgfile)
-        img = cv2.imread(self.sumberdata + imgfile)
+    def ambilgambar(self, i):
+        print(self.sumberdata)
+        files = sorted(os.listdir(self.sumberdata))
+        list_file = []
+        for fname in files:
+            if fname.endswith('png'):
+                list_file.append(fname)
+        img = cv2.imread(self.sumberdata + list_file[i])
         return img
 
 

@@ -16,6 +16,7 @@ MR301 = '0'
 B204 = '0'
 counter = 0
 
+
 def terimaTemp():
     pesan = s.recv(1024).decode('utf-8')
     pesan = pesan.replace('\r', '')
@@ -47,6 +48,7 @@ def terimaTemp():
         print(f'{pesan}: {kirim}')
         s.send(kirim.encode('ascii'))
 
+
 terimaTemp()
 terimaTemp()
 terimaTemp()
@@ -60,7 +62,7 @@ if trig == 'start':
         if counter < 12:
             MR5 = '1'
             MR6 = '0'
-        elif counter >= 12 and counter < 24:
+        elif 12 <= counter < 24:
             MR5 = '0'
             MR6 = '1'
         elif counter == 24:

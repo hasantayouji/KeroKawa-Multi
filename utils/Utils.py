@@ -1,7 +1,6 @@
 import socket
 from datetime import datetime
 
-import cv2
 
 # Koneksi untuk button manual
 port = 8501

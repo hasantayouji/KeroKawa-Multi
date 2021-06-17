@@ -8,7 +8,10 @@ import cv2
 import time
 
 dummy = cv2.imread("/home/jetsonmapinai/Documents/AI Visual Inspection/7000.png")
-demmy = cv2.rectangle(dummy, (0, 0), (1280, 1024), (0, 0, 0))
+
+
+def get_img():
+    return dummy
 
 
 class kamera():

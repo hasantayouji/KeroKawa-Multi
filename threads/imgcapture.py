@@ -1,24 +1,24 @@
 import threading
-from libraries.basler_cam import kamera
+from libraries.basler_cam import kamera, get_img
 from libraries import zmqimage
 from utils.Utils import get_plc_data, change_plc_data, connectPLC, save_log
 
 connectPLC()
-
 basler1 = kamera(ip_address='192.168.0.235')
 basler2 = kamera(ip_address='192.168.0.234')
 basler3 = kamera(ip_address='192.168.0.123')
-
 try:
     zmqo_images = zmqimage.ZmqConnect(connect_to="tcp://localhost:5678")
     save_log('Connected to processing script')
 except:
     save_log('Unable to connect to processing script')
 
+PART_FLAG = False
+
 
 class CamCapture(threading.Thread):
     def run(self):
-        intd = 0
+        global PART_FLAG
         while True:
             cam_status = get_plc_data('MR15')
             cam_pos_T1_1 = get_plc_data('MR5')
@@ -50,10 +50,11 @@ class CamCapture(threading.Thread):
                     zmqo_images.imsend(msg, cam1_img)
                     zmqo_images.imsend(msg, cam2_img)
                     zmqo_images.imsend(msg, cam3_img)
+                    PART_FLAG = True
                 change_plc_data('MR300', '0')
-            elif cam_status == '0' and end_part == '1':
-
-                zmqo_images.imsend(["Done", "Done"], cam1_img)
-                zmqo_images.imsend(["Done", "Done"], cam1_img)
-                zmqo_images.imsend(["Done", "Done"], cam1_img)
+            elif cam_status == '0' and end_part == '1' and PART_FLAG:
+                PART_FLAG = False
+                zmqo_images.imsend(["Done", "Done"], get_img())
+                zmqo_images.imsend(["Done", "Done"], get_img())
+                zmqo_images.imsend(["Done", "Done"], get_img())
                 print('FINISH 1 PART')
