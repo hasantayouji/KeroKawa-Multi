@@ -20,9 +20,6 @@ class CamCapture(threading.Thread):
     def run(self):
         intd = 0
         while True:
-            intd += 1
-            save_log(f'Processing part number {intd}')
-            print(f'{intd}')
             cam_status = get_plc_data('MR15')
             cam_pos_T1_1 = get_plc_data('MR5')
             cam_pos_T1_2 = get_plc_data('MR6')
