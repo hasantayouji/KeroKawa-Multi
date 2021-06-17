@@ -1,11 +1,10 @@
 import threading
 from libraries import zmqimage
-import cv2
 import time
 from utils.Utils import change_plc_data, get_plc_data, save_log
 from inferences.decision import final_decision
 from inferences.decisiond78 import d78_decision
-from inferences.inference import do_detect
+from inferences.inference import do_detect, warmup
 
 
 AIO_IP_ADDRESS = "192.168.0.77"
@@ -14,12 +13,11 @@ zmqi_img = zmqimage.ZmqImageShowServer(open_port="tcp://*:5679")
 zmqo = zmqimage.ZmqConnect(connect_to=f"tcp://{AIO_IP_ADDRESS}:3445")  # master/GUI
 zmqo_aio_ng = zmqimage.ZmqConnect(connect_to=f"tcp://{AIO_IP_ADDRESS}:3435")
 zmqo_save = zmqimage.ZmqConnect(connect_to=f"tcp://{AIO_IP_ADDRESS}:3535")  # saving
-dummy = cv2.imread('dummy.png')
 
 
 class Processing(threading.Thread):
     def run(self):
-        do_detect(dummy)
+        warmup()
         change_plc_data('MR0', '1')
         slist1 = []; slist2 = []; slist3 = []
         slist4 = []; slist5 = []; slist6 = []

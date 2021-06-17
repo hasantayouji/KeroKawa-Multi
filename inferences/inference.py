@@ -50,6 +50,11 @@ def do_detect(image):
     return ori, image, cls_det, bbox
 
 
+def warmup():
+    dummy = cv2.imread(IMAGE_PATH)
+    do_detect(dummy)
+
+
 def main():
     image = cv2.imread(IMAGE_PATH)
     __, image, __, __ = do_detect(image)
